@@ -1,55 +1,51 @@
 %define	major 0
 %define libname	%mklibname altermime %{major}
+%define develname %mklibname -d altermime
 
 Summary:	Allows you to modify mailpacks
 Name:		altermime
-Version:	0.3.7
-Release:	%mkrel 3
+Version:	0.3.8
+Release:	%mkrel 1
 License:	BSD
 Group:		Networking/Mail
 URL:		http://www.pldaniels.com/altermime/
-Source0:	http://www.pldaniels.com/altermime/%{name}-%{version}.tar.bz2
+Source0:	http://www.pldaniels.com/altermime/%{name}-%{version}.tar.gz
 Patch0:		altermime-0.3.7-shared.diff
 BuildRequires:	libtool
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 
 %description
-alterMIME is a small program which is used to alter your
-mime-encoded emailpacks as typically received by Inflex,
-XaMime and AMaViS.
+alterMIME is a small program which is used to alter your mime-encoded
+emailpacks as typically received by Inflex, XaMime and AMaViS.
  
-alterMIME will allow you to put in things like disclaimers
-in each email's text body, and also permit you to nullify
-(make into a zero-byte) attachments. 
+alterMIME will allow you to put in things like disclaimers in each email's
+text body, and also permit you to nullify (make into a zero-byte) attachments.
 
 %package -n	%{libname}
 Summary:	Shared %{name} library
 Group:          System/Libraries
 
 %description -n	%{libname}
-alterMIME is a small program which is used to alter your
-mime-encoded emailpacks as typically received by Inflex,
-XaMime and AMaViS.
+alterMIME is a small program which is used to alter your mime-encoded
+emailpacks as typically received by Inflex, XaMime and AMaViS.
  
-alterMIME will allow you to put in things like disclaimers
-in each email's text body, and also permit you to nullify
-(make into a zero-byte) attachments. 
+alterMIME will allow you to put in things like disclaimers in each email's
+text body, and also permit you to nullify (make into a zero-byte) attachments.
 
-%package -n	%{libname}-devel
+%package -n	%{develname}
 Summary:	Development files for the %{name} library
 Group:		Development/C
-Provides:	%{name}-devel
-Provides:	lib%{name}-devel
+Provides:	%{name}-devel lib%{name}-devel
+Provides:	%{libname}-devel = %{version}-%{release}
+Obsoletes:	%{libname}-devel
 Requires:	%{libname} = %{version}-%{release}
 
-%description -n	%{libname}-devel
-alterMIME is a small program which is used to alter your
-mime-encoded emailpacks as typically received by Inflex,
-XaMime and AMaViS.
+%description -n	%{develname}
+alterMIME is a small program which is used to alter your mime-encoded
+emailpacks as typically received by Inflex, XaMime and AMaViS.
  
-alterMIME will allow you to put in things like disclaimers
-in each email's text body, and also permit you to nullify
-(make into a zero-byte) attachments. 
+alterMIME will allow you to put in things like disclaimers in each email's
+text body, and also permit you to nullify (make into a zero-byte) attachments.
 
 %prep
 
@@ -57,8 +53,9 @@ in each email's text body, and also permit you to nullify
 %patch0 -p0
 
 %build
+%serverbuild
 
-%make RPM_OPT_FLAGS="%{optflags} -fPIC -D_REENTRANT -I." libdir=%{_libdir}
+%make RPM_OPT_FLAGS="$CFLAGS -fPIC -D_REENTRANT -I." libdir=%{_libdir}
 
 %install
 [ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
@@ -84,11 +81,9 @@ in each email's text body, and also permit you to nullify
 %defattr(-,root,root)
 %{_libdir}/*.so.*
 
-%files -n %{libname}-devel
+%files -n %{develname}
 %defattr(-,root,root)
 %{_includedir}/%{name}
 %{_libdir}/*.so
 %{_libdir}/*.a
 %{_libdir}/*.la
-
-
