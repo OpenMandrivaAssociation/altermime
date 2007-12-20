@@ -12,6 +12,7 @@ URL:		http://www.pldaniels.com/altermime/
 Source0:	http://www.pldaniels.com/altermime/%{name}-%{version}.tar.gz
 Patch0:		altermime-0.3.7-shared.diff
 BuildRequires:	libtool
+BuildRoot:	%{_tmppath}/%{name}-buildroot
 
 %description
 alterMIME is a small program which is used to alter your mime-encoded
