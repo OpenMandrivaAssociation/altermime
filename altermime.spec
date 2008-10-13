@@ -5,12 +5,13 @@
 Summary:	Allows you to modify mailpacks
 Name:		altermime
 Version:	0.3.8
-Release:	%mkrel 2
+Release:	%mkrel 3
 License:	BSD
 Group:		Networking/Mail
 URL:		http://www.pldaniels.com/altermime/
 Source0:	http://www.pldaniels.com/altermime/%{name}-%{version}.tar.gz
 Patch0:		altermime-0.3.7-shared.diff
+Patch1:		altermime-0.3-dev.diff
 BuildRequires:	libtool
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -51,6 +52,7 @@ text body, and also permit you to nullify (make into a zero-byte) attachments.
 
 %setup -q
 %patch0 -p0
+%patch1 -p1
 
 %build
 %serverbuild
