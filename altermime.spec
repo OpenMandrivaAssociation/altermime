@@ -5,7 +5,7 @@
 Summary:	Allows you to modify mailpacks
 Name:		altermime
 Version:	0.3.10
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	BSD
 Group:		Networking/Mail
 URL:		http://www.pldaniels.com/altermime/
@@ -54,8 +54,9 @@ text body, and also permit you to nullify (make into a zero-byte) attachments.
 
 %build
 %serverbuild
+export LDFLAGS="`rpm --eval %%configure|grep LDFLAGS|cut -d\\" -f2|sed -e 's/\$LDFLAGS\ //'`"
 
-%make RPM_OPT_FLAGS="$CFLAGS -fPIC -D_REENTRANT -I." libdir=%{_libdir} LDFLAGS="-Wl,--as-needed -Wl,--no-undefined"
+%make RPM_OPT_FLAGS="$CFLAGS -fPIC -D_REENTRANT -I." libdir=%{_libdir} LDFLAGS="$LDFLAGS"
 
 %install
 rm -rf %{buildroot}
