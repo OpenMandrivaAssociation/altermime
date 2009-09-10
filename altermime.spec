@@ -5,7 +5,7 @@
 Summary:	Allows you to modify mailpacks
 Name:		altermime
 Version:	0.3.10
-Release:	%mkrel 2
+Release:	%mkrel 3
 License:	BSD
 Group:		Networking/Mail
 URL:		http://www.pldaniels.com/altermime/
