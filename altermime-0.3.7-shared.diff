@@ -1,0 +1,82 @@
+--- Makefile	2008-11-16 09:45:45.000000000 +0100
++++ Makefile.oden	2008-11-17 13:03:39.000000000 +0100
+@@ -1,35 +1,48 @@
+-# Wedit Makefile for project altermime
+-#CC=cc
+-#CC=ccmalloc gcc
+-#CFLAGS=-Wall -g
+-#CFLAGS=-Wall -ggdb
+-
+-# Optional builds
+-#	ALTERMIME_PRETEXT - Allows prefixing of the email body with a file, sort of the
+-#								opposite of a disclaimer.
+-#ALTERMIME_OPTIONS=-DALTERMIME_PRETEXT
+-ALTERMIME_OPTIONS=
+-CFLAGS=-Wall -Werror -g -I. -O2 $(ALTERMIME_OPTIONS)
+-OBJS= strstack.o mime_alter.o ffget.o pldstr.o filename-filters.o logger.o MIME_headers.o libmime-decoders.o boundary-stack.o qpe.o
+-
+-
+-.c.o:
+-	${CC} ${CFLAGS} -c $*.c
+-
+-all: altermime
++CFLAGS=$(RPM_OPT_FLAGS) -I. -fPIC -DPIC -D_REENTRANT 
++CFLAGS+=#-DALTERMIME_PRETEXT
++CC=gcc
++bindir = /usr/bin
++libdir = /usr/lib
++includedir = /usr/include
++DESTDIR = 
++
++AR = ar
++RANLIB = ranlib
++LIBTOOL = libtool
++INSTALL = install -c
++LDFLAGS = 
++
++LT_CURRENT=3
++LT_REVISION=7
++LT_AGE=3
+ 
+-altermime: altermime.c ${OBJS}
+-	${CC} ${CFLAGS} altermime.c ${OBJS} -o altermime
+-
+-
+-# Build Install
+-install: altermime
+-	strip altermime
+-	cp altermime /usr/local/bin
+-	chmod a+rx /usr/local/bin/altermime
++OBJS= strstack.o mime_alter.o ffget.o pldstr.o filename-filters.o logger.o MIME_headers.o libmime-decoders.o boundary-stack.o qpe.o
++LTOBJS:= $(OBJS:.o=.lo)
+ 
+-uninstall:
+-	rm -f /usr/local/bin/altermime
++all: libaltermime.la altermime
+ 
++libaltermime.la: $(LTOBJS)
++	$(LIBTOOL) --mode=link $(CC) $(CFLAGS) $(LDFLAGS) -rpath $(libdir) \
++	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) -o \
++	libaltermime.la $(LTOBJS)
++
++altermime: altermime.o libaltermime.la
++	$(LIBTOOL) --mode=link $(CC) $(CFLAGS) -o $@ $(LDFLAGS) $^
++
++%.o: %.c
++	$(CC) -c $(CFLAGS) $< -o $@
++
++%.lo: %.c
++	$(LIBTOOL) --mode=compile $(CC) -c $(CFLAGS) $< -o $@
++
++install:
++	$(INSTALL) -d $(DESTDIR)$(bindir)
++	$(INSTALL) -d $(DESTDIR)$(libdir)
++	$(INSTALL) -d $(DESTDIR)$(includedir)/altermime
++	$(LIBTOOL) --mode=install $(INSTALL) libaltermime.la $(DESTDIR)$(libdir)
++	$(LIBTOOL) --mode=install $(INSTALL) -m 755 altermime $(DESTDIR)$(bindir)
++	$(INSTALL) -m 644 *.h $(DESTDIR)$(includedir)/altermime/
++ 
+ clean:
+-	rm -f *.o altermime
++	rm -f *.o *.lo *.a *.la altermime
++	rm -rf .libs
