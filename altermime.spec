@@ -11,6 +11,7 @@ Group:		Networking/Mail
 URL:		https://www.pldaniels.com/altermime/
 Source0:	http://www.pldaniels.com/altermime/%{name}-%{version}.tar.gz
 Patch0:		altermime-0.3.7-shared.diff
+BuildRequires:	make
 BuildRequires:	libtool
 
 %description
